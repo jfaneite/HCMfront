@@ -22,3 +22,5 @@ $ ./manage.py runserver
 $ 
 ```
 
+la ruta para administrar la app...
+http://127.0.0.1:8000/admin/
