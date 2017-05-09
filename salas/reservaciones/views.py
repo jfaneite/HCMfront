@@ -1,61 +1,12 @@
 from datetime import datetime, timedelta
-from django.http.response import HttpResponse
 from django.shortcuts import render
-from django.urls.base import reverse_lazy
-from django.views import generic
-from django.views.generic.base import TemplateView
-from django.views.generic import ListView
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
+from django.views.generic.edit import CreateView, FormView
 
 from reservaciones.forms import ReservaEmpleadoForm
 from reservaciones.models import Sala, Reservacion, Insumo, InsumoSala, InsumoReservacion
 
 
-class ReservacionesView(TemplateView):
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated and request.user.is_superuser:
-            return render(request, 'home.html')
-        else:
-            return render(request, 'reservaciones/reservar.html')
 
-class ReservacionesListView(ListView):
-    model = Reservacion
-    template_name = 'reservaciones/reservaciones_list.html'
-    queryset = Reservacion.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated and request.user.is_superuser:
-            admin = True
-        else:
-            admin = False
-
-        return render(request, self.template_name, context={'admin': admin, 'reserva_list': self.get_queryset().all()})
-
-class ReservacionesDetailView(DetailView):
-    model = Reservacion
-    template_name = 'reservaciones/reservaciones_detail.html'
-
-class ReservacionesCreateView(CreateView):
-    model = Reservacion
-    template_name = 'reservaciones/reservaciones_form.html'
-    success_url = reverse_lazy('reservaciones:list')
-    fields = [
-        'user', 'sala', 'cantidad_personas', 'hora_inicio', 'hora_termino', 'estatus', 'fecha'
-    ]
-
-class ReservacionesUpdateView(UpdateView):
-    model = Reservacion
-    template_name = 'reservaciones/reservaciones_form.html'
-    success_url = reverse_lazy('reservaciones:list')
-    fields = [
-        'user', 'sala', 'cantidad_personas', 'hora_inicio', 'hora_termino', 'estatus', 'fecha'
-    ]
-
-class ReservacionesDeleteView(DeleteView):
-    model = Reservacion
-    template_name = 'reservaciones/reservaciones_confirm_delete.html'
-    success_url = reverse_lazy('reservaciones:list')
 
 class ReservaEmpleadoView(FormView):
     form_class = ReservaEmpleadoForm
@@ -68,9 +19,8 @@ class ReservaEmpleadoView(FormView):
             cantidad = form.validated_data()['cantidad_personas']
             insumos = form.validated_data()['insumos']
 
-            salas = Sala.objects.exclude(
-                id__in=Reservacion.objects.all().values_list('sala_id', flat=True),
-                capacidad__lte=cantidad, insumosala__insumo__in=insumos
+            salas = Sala.objects.filter(capacidad__gte=cantidad, insumosala__insumo__in=insumos).exclude(
+                id__in=Reservacion.objects.filter(estatus__in=(2, 3)).values_list('sala_id', flat=True)
             )
 
             arreglo_salas = []
