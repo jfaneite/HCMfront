@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %} Admin {% endblock %}
+
+{% block content %}
+    <p>
+        <a href="{% url "salas:list" %}">Administrar Salas</a>
+    </p>
+
+    <p>
+        <a href="{% url "reservaciones:list" %}">Administrar Reservaciones</a>
+    </p>
+
+{% endblock %}
