@@ -1,36 +1,68 @@
 {% extends 'base.html' %}
 
-{% block title %} Formulario de Reserva {% endblock %}
+{% block title %}
+    <h2> Resultados de búsqueda </h2>
+    <small> <a href="{% url "reservaciones:reserva" %}">regresar</a></small>
+{% endblock %}
 
 {% block content %}
-    <p>
-        <a href="{% url "reservaciones:reserva" %}">regresar</a>
-    </p>
-    <ul>
-        {% for sala in salas_disponibles %}
-
-            <li>
-                <p>{{ sala.sala.nombre }}</p>
-
-                <p>
-                    Horario Disponibilidad: {{ sala.sala.horario_disponibilidad }} |
-                    Capacidad: {{ sala.sala.capacidad }} |
-                    Insumos: {% for insumo in sala.insumos %}
+    <div class="container">
+        <table class="table table-hover">
+            <thead>
+                <th>Horarios disponibles</th>
+                <th>Capacidad</th>
+                <th>Insumos disponibles</th>
+                <th>Arrendar</th>
+            </thead>
+            <tbody>
+             {% for sala in salas_disponibles %}
+                <tr>
+                    <td>{{ sala.sala.horario_disponibilidad }}</td>
+                    <td>{{ sala.sala.capacidad }}</td>
+                    <td>{% for insumo in sala.insumos %}
                                 {{ insumo }},
-
                              {% endfor %}
-                    <form method="post" action="{% url "reservaciones:crearReserva" %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="sala" value={{ sala.sala.id }} />
-                        <input type="hidden" name="horario_disponibilidad" value={{ sala.sala.horario_disponibilidad }} />
-                        <input type="hidden" name="cantidad_personas" value={{ cantidad_personas }} />
-                        <input type="hidden" name="insumos" value={{ insumos }} />
-                        <input type="submit" value="Arrendar" />
-                    </form>
-                </p>
-
-
-            </li>
-        {% endfor %}
-    </ul>
+                    </td>
+                    <td>
+                        <form method="post" action="{% url "reservaciones:crearReserva" %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="sala" value={{ sala.sala.id }} />
+                            <input type="hidden" name="horario_disponibilidad" value={{ sala.sala.horario_disponibilidad }} />
+                            <input type="hidden" name="cantidad_personas" value={{ cantidad_personas }} />
+                            <input type="hidden" name="insumos" value={{ insumos }} />
+                            <input type="submit" value="Arrendar" class="btn btn-success"/>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{#    <ul>#}
+{#        {% for sala in salas_disponibles %}#}
+{##}
+{#            <li>#}
+{#                <p>{{ sala.sala.nombre }}</p>#}
+{##}
+{#                <p>#}
+{#                    Horario Disponibilidad: {{ sala.sala.horario_disponibilidad }} |#}
+{#                    Capacidad: {{ sala.sala.capacidad }} |#}
+{#                    Insumos: {% for insumo in sala.insumos %}#}
+{#                                {{ insumo }},#}
+{##}
+{#                             {% endfor %}#}
+{#                    <form method="post" action="{% url "reservaciones:crearReserva" %}">#}
+{#                        {% csrf_token %}#}
+{#                        <input type="hidden" name="sala" value={{ sala.sala.id }} />#}
+{#                        <input type="hidden" name="horario_disponibilidad" value={{ sala.sala.horario_disponibilidad }} />#}
+{#                        <input type="hidden" name="cantidad_personas" value={{ cantidad_personas }} />#}
+{#                        <input type="hidden" name="insumos" value={{ insumos }} />#}
+{#                        <input type="submit" value="Arrendar" />#}
+{#                    </form>#}
+{#                </p>#}
+{##}
+{##}
+{#            </li>#}
+{#        {% endfor %}#}
+{#    </ul>#}
 {% endblock %}

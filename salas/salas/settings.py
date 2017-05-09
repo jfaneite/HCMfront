@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'reservaciones',
-    'sala_reuniones'
+    'sala_reuniones',
+    'bootstrap3'
 ]
 
 MIDDLEWARE = [

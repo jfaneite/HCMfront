@@ -24,3 +24,5 @@ urlpatterns = [
     url(r'^reservaciones/', include('reservaciones.urls', namespace='reservaciones')),
     url(r'^salas/', include('sala_reuniones.urls', namespace='salas')),
 ]
+
+admin.site.site_header = 'Administracion de HCMFront'

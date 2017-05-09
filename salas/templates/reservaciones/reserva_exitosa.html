@@ -1,12 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %} Reserva Exitosa! {% endblock %}
+{% block title %}
+    <h2> Resultado </h2>
+{% endblock %}
 
 {% block content %}
-    <p>
+    <div class="container well">
+        <p>
         {{ mensaje }}
     </p>
     <p>
-        <a href="{% url "reservaciones:reserva" %}">regresar</a>
+        <a href="{% url "reservaciones:reserva" %}" class="btn">Regresar</a>
     </p>
+    </div>
+
 {% endblock %}
